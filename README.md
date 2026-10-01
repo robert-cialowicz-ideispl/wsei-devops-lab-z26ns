@@ -7,7 +7,7 @@ Repozytoria kodu i automatyzacja pracy z nim wykorzystują GitHub. Azure DevOps 
 | Data | Lab | Temat |
 |---|---|---|
 | 3 października 2026 | [lab1](lab1/lab1.md) | Wprowadzenie do Azure i podstawowych zasobów |
-| 17 października 2026 | lab2 | Linux i GitHub: repozytorium, gałęzie i pull requesty |
+| 17 października 2026 | [lab2](lab2/lab2.md) | Linux i GitHub: repozytorium, gałęzie i pull requesty |
 | 7 listopada 2026 | lab3 | Docker: obrazy i kontenery |
 | 21 listopada 2026 | lab4 | Docker Compose: usługi, sieci i wolumeny |
 | 5 grudnia 2026 | lab5 | CI w GitHub Actions: testy i kontrola pull requestów |
