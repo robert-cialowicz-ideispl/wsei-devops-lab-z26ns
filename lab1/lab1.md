@@ -6,7 +6,11 @@ Utworzyć grupę zasobów nazwaną nazwiskiem i numerem indeksu, utworzyć Stora
 
 W każdym ćwiczeniu wybierz jeden wariant: **Azure PowerShell** albo **Azure CLI**. Polecenia Azure CLI są przygotowane dla terminala Linux (Bash) i macOS; na obu systemach użyj wspólnej sekcji **Azure CLI — Linux / macOS**.
 
+Jeżeli wykonywanie skryptów lub poleceń na komputerze jest zablokowane, po zalogowaniu do [Azure Portal](https://portal.azure.com) uruchom **Cloud Shell**. Wybierz środowisko **PowerShell** dla wariantu Azure PowerShell albo **Bash** dla wariantu Azure CLI. Cloud Shell jest już uwierzytelniony przy użyciu konta zalogowanego w portalu, dlatego w takim przypadku pomiń ćwiczenie 1 i rozpocznij od ćwiczenia 2.
+
 ## Ćwiczenie 1 – Logowanie do Azure
+
+To ćwiczenie wykonaj tylko wtedy, gdy korzystasz z terminala na swoim komputerze.
 
 <details>
 <summary>Azure PowerShell</summary>
@@ -77,61 +81,69 @@ Wybierz unikalną nazwę konta. Nazwa Storage Account musi mieć od 3 do 24 znak
 
 W wariancie Azure CLI zastąp `rg-kowalski-123456` swoją nazwą Resource Group, a `stkowalski123456` własną unikalną nazwą Storage Account. Używaj tych samych nazw w kolejnych poleceniach.
 
+Jeżeli tworzenie Storage Account w regionie `westeurope` zakończy się błędem `Forbidden`, ponów próbę, wybierając jeden z regionów: `polandcentral`, `italynorth` albo `francecentral`.
+
 <details>
 <summary>Azure PowerShell</summary>
 
+1. Zarejestruj providera `Microsoft.Storage`:
+   ```powershell
+   Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
+   ```
+2. Sprawdź stan rejestracji:
+   ```powershell
+   Get-AzResourceProvider -ProviderNamespace Microsoft.Storage |
+       Select-Object ProviderNamespace, RegistrationState
+   ```
+   Rejestracja może potrwać kilkadziesiąt sekund. Przed przejściem dalej zaczekaj na stan `Registered`.
+3. Utwórz Storage Account:
+   ```powershell
+   $storageName = "stkowalski123456"
+
+   New-AzStorageAccount -ResourceGroupName $resourceGroupName `
+                        -Name $storageName `
+                        -Location $location `
+                        -SkuName Standard_LRS `
+                        -Kind StorageV2
+
+   Get-AzStorageAccount -ResourceGroupName $resourceGroupName
+   ```
+
+Jeżeli wystąpi błąd `Forbidden` dla regionu `westeurope`, ustaw inny region i ponów polecenie `New-AzStorageAccount`, na przykład:
+
 ```powershell
-$storageName = "stkowalski123456"
-
-New-AzStorageAccount -ResourceGroupName $resourceGroupName `
-                     -Name $storageName `
-                     -Location $location `
-                     -SkuName Standard_LRS `
-                     -Kind StorageV2
-
-Get-AzStorageAccount -ResourceGroupName $resourceGroupName
+$location = "polandcentral"
 ```
 
-Jeśli pojawi się błąd informujący o niezarejestrowanym providerze, sprawdź i zarejestruj `Microsoft.Storage`:
-
-```powershell
-Get-AzResourceProvider -ProviderNamespace Microsoft.Storage
-Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
-```
-
-Rejestracja może potrwać kilkadziesiąt sekund. Sprawdzisz jej stan poleceniem:
-
-```powershell
-Get-AzResourceProvider -ProviderNamespace Microsoft.Storage |
-    Select-Object ProviderNamespace, RegistrationState
-```
-
-Po uzyskaniu stanu `Registered` ponów tworzenie Storage Account.
+Zamiast `polandcentral` możesz użyć `italynorth` albo `francecentral`.
 
 </details>
 
 <details>
 <summary>Azure CLI — Linux / macOS</summary>
 
+1. Zarejestruj providera `Microsoft.Storage`:
+   ```
+   az provider register --namespace Microsoft.Storage
+   ```
+2. Sprawdź stan rejestracji:
+   ```
+   az provider show --namespace Microsoft.Storage --query registrationState --output tsv
+   ```
+   Rejestracja może potrwać kilkadziesiąt sekund. Przed przejściem dalej zaczekaj na stan `Registered`.
+3. Utwórz Storage Account:
+   ```
+   az storage account create --resource-group rg-kowalski-123456 --name stkowalski123456 --location westeurope --sku Standard_LRS --kind StorageV2
+   az storage account show --resource-group rg-kowalski-123456 --name stkowalski123456 --output table
+   ```
+
+Jeżeli wystąpi błąd `Forbidden` dla regionu `westeurope`, ponów tworzenie konta z innym regionem, na przykład:
+
 ```
-az storage account create --resource-group rg-kowalski-123456 --name stkowalski123456 --location westeurope --sku Standard_LRS --kind StorageV2
-az storage account show --resource-group rg-kowalski-123456 --name stkowalski123456 --output table
+az storage account create --resource-group rg-kowalski-123456 --name stkowalski123456 --location polandcentral --sku Standard_LRS --kind StorageV2
 ```
 
-Jeśli pojawi się błąd informujący o niezarejestrowanym providerze, sprawdź stan `Microsoft.Storage`:
-
-```
-az provider show --namespace Microsoft.Storage --query registrationState --output tsv
-```
-
-Jeżeli stan jest inny niż `Registered`, zarejestruj providera:
-
-```
-az provider register --namespace Microsoft.Storage
-az provider show --namespace Microsoft.Storage --query registrationState --output tsv
-```
-
-Rejestracja może potrwać kilkadziesiąt sekund. Po uzyskaniu stanu `Registered` ponów polecenie `az storage account create`.
+Zamiast `polandcentral` możesz użyć `italynorth` albo `francecentral`.
 
 </details>
 
