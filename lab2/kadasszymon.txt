@@ -1,0 +1,17 @@
+# Lab 2 – Linux i GitHub
+
+Login GitHub: twoj-login
+
+## Polecenia Linux
+
+| Polecenie | Do czego służy | Moja obserwacja lub wynik |
+|---|---|---|
+| `pwd` | Pokazuje bieżący katalog. | /tmp/user/home |
+| `ls -la` | Wyświetla pliki, w tym ukryte. | drwx------ 4 1043 1043 80 Oct 3 14:45 . ogólnie pokazuje uprawnienia do danego pliku, date modyfikacji, 1043 itd. to chyba były grupy procesów czy coś w ten deseń |
+| `mkdir -p alojzy` | Tworzy katalogi. | Tworzy katalog o nazwie Alojzy z defaultowymi uprawnieniami malejącymi |
+| `grep -n` | Wyszukuje tekst i pokazuje numer wiersza. | zwraca  |
+| `wc -l` | Liczy wiersze pliku. | Cokolwiek chodzi o proces |
+
+## Git i Pull Request
+
+- Nazwa mojej gałęzi: `lab2/kadasszymon`
