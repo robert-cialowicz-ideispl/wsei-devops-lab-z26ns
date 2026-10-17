@@ -1,4 +1,4 @@
-Login GitHub: twoj-login
+Login GitHub: huberciak
 
 ## Polecenia Linux
 
