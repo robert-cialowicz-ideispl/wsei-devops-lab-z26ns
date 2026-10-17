@@ -6,11 +6,11 @@ Login GitHub: KacperNiewiadomski
 
 | Polecenie | Do czego służy | Moja obserwacja lub wynik |
 |---|---|---|
-| `pwd` | Pokazuje bieżący katalog. | Uzupełnij |
-| `ls -la` | Wyświetla pliki, w tym ukryte. | Uzupełnij |
-| `mkdir -p` | Tworzy katalogi. | Uzupełnij |
-| `grep -n` | Wyszukuje tekst i pokazuje numer wiersza. | Uzupełnij |
-| `wc -l` | Liczy wiersze pliku. | Uzupełnij |
+| `pwd` | Pokazuje bieżący katalog. | Wyświetliło ścieżkę do katalogu `wsei-devops-lab-z26ns`. |
+| `ls -la` | Wyświetla pliki, w tym ukryte. | Pokazało zawartość katalogu, w tym ukryty folder `.git`. |
+| `mkdir -p` | Tworzy katalogi. | Utworzyło katalog `lab2/submissions`. |
+| `grep -n` | Wyszukuje tekst i pokazuje numer wiersza. | Znalazło słowo „Druga” w linii 2. |
+| `wc -l` | Liczy wiersze pliku. | Wyświetliło wynik 2, ponieważ plik zawierał dwie linie. |
 
 ## Git i Pull Request
 
