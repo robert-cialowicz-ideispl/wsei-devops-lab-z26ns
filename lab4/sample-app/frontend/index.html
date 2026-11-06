@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lab 4 — lista produktów</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 20px; color: #172b4d; background: #f4f6fa; }
+        main { background: white; padding: 28px; border-radius: 12px; }
+        h1 { margin-top: 0; }
+        form { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+        label { width: 100%; }
+        input, button { font: inherit; padding: 10px; border: 1px solid #8a96a8; border-radius: 6px; }
+        input { flex: 1; min-width: 140px; }
+        button { background: #244cc5; color: white; cursor: pointer; }
+        li { padding: 12px 0; border-bottom: 1px solid #e3e8ef; }
+        small { color: #526075; }
+        #status { min-height: 24px; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Lista produktów — lab4</h1>
+    <p>Dodaj produkt, a następnie sprawdź, co dzieje się z nim po zatrzymaniu i odtworzeniu kontenerów.</p>
+    <form id="productForm">
+        <label for="productName">Nazwa produktu</label>
+        <input id="productName" name="productName" required maxlength="200" placeholder="Np. Klawiatura">
+        <button type="submit">Dodaj produkt</button>
+    </form>
+    <p id="status" role="status" aria-live="polite"></p>
+    <h2>Produkty w bazie</h2>
+    <ul id="products"></ul>
+</main>
+<script>
+    // Bez początkowego ukośnika: działa zarówno pod /, jak i /site/N/.
+    const productsUrl = new URL('api/products', window.location.href);
+    const form = document.getElementById('productForm');
+    const input = document.getElementById('productName');
+    const list = document.getElementById('products');
+    const status = document.getElementById('status');
+    const submitButton = form.querySelector('button');
+
+    async function loadProducts() {
+        try {
+            const response = await fetch(productsUrl, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const products = await response.json();
+            list.replaceChildren();
+            for (const product of products) {
+                const item = document.createElement('li');
+                const name = document.createElement('strong');
+                name.textContent = product.name;
+                const date = document.createElement('small');
+                date.textContent = ` — ${new Date(product.createdAt).toLocaleString('pl-PL')}`;
+                item.append(name, date);
+                list.append(item);
+            }
+            status.textContent = products.length ? `Liczba produktów: ${products.length}` : 'Brak produktów. Dodaj pierwszy produkt.';
+        } catch (error) {
+            status.textContent = 'API jest niedostępne. Sprawdź stan usług i logi backendu, a następnie odśwież stronę.';
+            console.error('Odczyt produktów:', error);
+        }
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const name = input.value.trim();
+        if (!name) return;
+        submitButton.disabled = true;
+        try {
+            const response = await fetch(productsUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            input.value = '';
+            await loadProducts();
+        } catch (error) {
+            status.textContent = 'Nie udało się dodać produktu. Sprawdź logi backendu.';
+            console.error('Zapis produktu:', error);
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+
+    loadProducts();
+</script>
+</body>
+</html>

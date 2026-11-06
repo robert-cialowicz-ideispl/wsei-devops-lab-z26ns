@@ -1,0 +1,53 @@
+name: lab4
+
+# Konfiguracja po ćwiczeniu 4: wolumen i oczekiwanie na gotowość bazy.
+# Porównaj z nią swój docker-compose.yml, jeśli masz błąd składni YAML.
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+      MSSQL_SA_PASSWORD: "Lab4Compose!2026"
+    volumes:
+      - db-data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa
+          -P 'Lab4Compose!2026' -C -Q 'SELECT 1' -b
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+
+  backend:
+    image: lab4-backend:local
+    build: ./backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=db;Database=ProductsDB;User Id=sa;Password=Lab4Compose!2026;TrustServerCertificate=True;"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    image: lab4-frontend:local
+    build: ./frontend
+    restart: unless-stopped
+
+  gateway:
+    image: lab4-gateway:local
+    build: ./gateway
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+
+volumes:
+  db-data:

@@ -1,0 +1,36 @@
+name: lab4
+
+# Wersja startowa. Rozbuduj ją zgodnie z lab4.md.
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Express
+      MSSQL_SA_PASSWORD: "Lab4Compose!2026"
+    restart: unless-stopped
+
+  backend:
+    image: lab4-backend:local
+    build: ./backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=db;Database=ProductsDB;User Id=sa;Password=Lab4Compose!2026;TrustServerCertificate=True;"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  frontend:
+    image: lab4-frontend:local
+    build: ./frontend
+    restart: unless-stopped
+
+  gateway:
+    image: lab4-gateway:local
+    build: ./gateway
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
