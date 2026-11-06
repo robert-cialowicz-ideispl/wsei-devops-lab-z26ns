@@ -1,12 +1,11 @@
 # Laboratorium 3 – Docker Fundamentals
 
 ## Prerekwizyty
-1. Połącz się z maszyną wirtualną używając SSH:
 
-	```
-	ssh studentideis@20.107.202.106 -p (50000 + N)
-    np. ssh studentideis@20.107.202.106 -p 50023
-	```
+1. Otwórz `https://20.166.92.179/terminal/N`, np. `https://20.166.92.179/terminal/23`, i zaloguj się jako `studentN`. Wszystkie polecenia poniżej wykonuj w **Bash na zdalnym Ubuntu**.
+2. Aplikację otwieraj w osobnej karcie pod **`https://20.166.92.179/site/N`**. Brama kieruje ten adres na port **8080** Twojej maszyny. Nie zmieniaj `N`, aby korzystać z cudzej maszyny.
+
+**Schowek w terminalu WWW:** `Ctrl` + `Alt` + `Shift` otwiera menu Guacamole z polem „Clipboard”. Ten sam skrót zamyka menu.
 
 ---
 
