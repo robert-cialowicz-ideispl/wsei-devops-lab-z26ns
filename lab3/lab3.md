@@ -47,9 +47,7 @@
 	```
 	docker ps
 	```
-4. Otwórz stronę w przeglądarce (http://localhost:8080 jeśli pracujesz lokalnie)
-   (Środowisko zdalne / VM) Jeśli korzystasz z maszyny współdzielonej z numerem studenta `N`, i obowiązuje formuła portu `51000 + N`, otwórz:
-	- `http://20.107.202.106:(51000 + N)`
+4. Otwórz stronę w przeglądarce pod adresem `https://20.166.92.179/site/N` (lokalnie: `http://localhost:8080`).
 
 ---
 
@@ -80,7 +78,7 @@
 	cat /usr/share/nginx/html/index.html
 	exit
 	```
-5. Odśwież stronę w przeglądarce: http://localhost:8080 (lub port z formuły 51000+N na środowisku zdalnym). Powinno wyświetlać Twój własny HTML.
+5. Odśwież stronę w przeglądarce pod adresem `https://20.166.92.179/site/N` (lokalnie: `http://localhost:8080`). Powinno wyświetlać Twój własny HTML.
 6. Zmień treść pliku i zobacz efekt bez restartu kontenera:
 	```
 	echo "<h1>Hello from student Imie Nazwisko NumerAlbumu</h1>" > ~/myweb/index.html
@@ -125,7 +123,7 @@ Korzystamy z kontenera `customweb` utworzonego w ćwiczeniu 3. Nie tworzymy nowy
 
 **Cel:** Porównaj bind mount z kopiowaniem plików do obrazu. Zbudujesz dwie wersje własnego obrazu i sprawdzisz, kiedy zmiana pliku HTML pojawia się w kontenerze.
 
-Polecenia wykonuj na maszynie Ubuntu, w tej samej sesji SSH co poprzednie ćwiczenia. Przewidywany czas: 15–20 minut.
+Polecenia wykonuj na maszynie Ubuntu w tym samym terminalu WWW (`https://20.166.92.179/terminal/N`) co w poprzednich ćwiczeniach. Przewidywany czas: 15–20 minut.
 
 1. Przejdź do katalogu ze stroną z ćwiczenia 3:
 
@@ -158,7 +156,7 @@ Polecenia wykonuj na maszynie Ubuntu, w tej samej sesji SSH co poprzednie ćwicz
    docker ps
    ```
 
-5. Otwórz ten sam adres strony co wcześniej: `http://20.107.202.106:(51000 + N)`, zastępując port obliczoną wartością, np. dla `N = 23`: `http://20.107.202.106:51023`. Powinna wyświetlić się Twoja strona.
+5. Otwórz ten sam adres strony co wcześniej: `https://20.166.92.179/site/N`, np. dla `N = 23`: `https://20.166.92.179/site/23`. Powinna wyświetlić się Twoja strona.
 
 6. Zmień lokalny plik HTML i odśwież stronę w przeglądarce:
 
