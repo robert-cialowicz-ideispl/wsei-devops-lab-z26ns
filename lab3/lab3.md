@@ -2,10 +2,12 @@
 
 ## Prerekwizyty
 
-1. Otwórz `https://20.166.92.179/terminal/N`, np. `https://20.166.92.179/terminal/23`, i zaloguj się jako `studentN`. Wszystkie polecenia poniżej wykonuj w **Bash na zdalnym Ubuntu**.
-2. Aplikację otwieraj w osobnej karcie pod **`https://20.166.92.179/site/N`**. Brama kieruje ten adres na port **8080** Twojej maszyny. Nie zmieniaj `N`, aby korzystać z cudzej maszyny.
+1. Odbierz od prowadzącego numer przypisanej maszyny `N` oraz login i hasło do Guacamole.
+2. Otwórz w przeglądarce `https://20.166.92.179/terminal/N`, podstawiając swój numer, np. `https://20.166.92.179/terminal/23`. Zaloguj się otrzymanymi danymi i wybierz połączenie do swojej maszyny, jeśli nie otworzy się automatycznie.
+3. Wszystkie polecenia wpisuj w Bash w terminalu Guacamole na przypisanej maszynie Ubuntu.
+4. Stronę uruchomioną w laboratorium otwieraj w osobnej karcie pod `https://20.166.92.179/site/N/`, np. `https://20.166.92.179/site/23/`. Zachowaj końcowy ukośnik. Brama kieruje ten adres na port `8080` Twojej maszyny.
 
-**Schowek w terminalu WWW:** `Ctrl` + `Alt` + `Shift` otwiera menu Guacamole z polem „Clipboard”. Ten sam skrót zamyka menu.
+**Schowek:** `Ctrl` + `Alt` + `Shift` otwiera i zamyka menu Guacamole. Użyj pola „Clipboard”, aby przenieść tekst między przeglądarką a terminalem.
 
 ---
 
@@ -47,13 +49,13 @@
 	```
 	docker ps
 	```
-4. Otwórz stronę w przeglądarce pod adresem `https://20.166.92.179/site/N` (lokalnie: `http://localhost:8080`).
+4. Otwórz stronę w przeglądarce pod adresem `https://20.166.92.179/site/N/`.
 
 ---
 
 ## Ćwiczenie 3 – Modyfikacja strony (bind mount)
 
-1. Stwórz katalog na własną stronę (PowerShell / Bash):
+1. Stwórz katalog na własną stronę w Bash w terminalu Guacamole:
 	```
 	mkdir ~/myweb
 	echo "<h1>Hello from student Imie Nazwisko </h1>" > ~/myweb/index.html
@@ -78,7 +80,7 @@
 	cat /usr/share/nginx/html/index.html
 	exit
 	```
-5. Odśwież stronę w przeglądarce pod adresem `https://20.166.92.179/site/N` (lokalnie: `http://localhost:8080`). Powinno wyświetlać Twój własny HTML.
+5. Odśwież stronę pod adresem `https://20.166.92.179/site/N/`. Strona powinna wyświetlić Twój własny HTML.
 6. Zmień treść pliku i zobacz efekt bez restartu kontenera:
 	```
 	echo "<h1>Hello from student Imie Nazwisko NumerAlbumu</h1>" > ~/myweb/index.html
@@ -123,7 +125,7 @@ Korzystamy z kontenera `customweb` utworzonego w ćwiczeniu 3. Nie tworzymy nowy
 
 **Cel:** Porównaj bind mount z kopiowaniem plików do obrazu. Zbudujesz dwie wersje własnego obrazu i sprawdzisz, kiedy zmiana pliku HTML pojawia się w kontenerze.
 
-Polecenia wykonuj na maszynie Ubuntu w tym samym terminalu WWW (`https://20.166.92.179/terminal/N`) co w poprzednich ćwiczeniach. Przewidywany czas: 15–20 minut.
+Pozostań w tej samej sesji Guacamole. Przewidywany czas: 15–20 minut.
 
 1. Przejdź do katalogu ze stroną z ćwiczenia 3:
 
@@ -156,7 +158,7 @@ Polecenia wykonuj na maszynie Ubuntu w tym samym terminalu WWW (`https://20.166.
    docker ps
    ```
 
-5. Otwórz ten sam adres strony co wcześniej: `https://20.166.92.179/site/N`, np. dla `N = 23`: `https://20.166.92.179/site/23`. Powinna wyświetlić się Twoja strona.
+5. Otwórz `https://20.166.92.179/site/N/`. Powinna wyświetlić się Twoja strona.
 
 6. Zmień lokalny plik HTML i odśwież stronę w przeglądarce:
 

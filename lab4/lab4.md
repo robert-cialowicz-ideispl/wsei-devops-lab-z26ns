@@ -4,21 +4,32 @@ Zbudujesz i uruchomisz aplikację z czterech usług, a następnie sprawdzisz trw
 
 ## Prerekwizyty i dostęp
 
-1. Korzystaj z tej samej maszyny Ubuntu i bramy WWW co na [lab3](../lab3/lab3.md). Adres IP bramy, numer maszyny `N` i dane logowania podaje prowadzący.
-2. Otwórz `https://20.166.92.179/terminal/N`, np. `https://20.166.92.179/terminal/23`, i zaloguj się jako `studentN`. Wszystkie polecenia poniżej wykonuj w **Bash na zdalnym Ubuntu**.
-3. Aplikację otwieraj w osobnej karcie pod **`https://20.166.92.179/site/N`**. Brama kieruje ten adres na port **8080** Twojej maszyny. Nie zmieniaj `N`, aby korzystać z cudzej maszyny.
-4. Sprawdź narzędzia:
+Korzystaj z tej samej maszyny Ubuntu co w [Lab 3](../lab3/lab3.md).
 
-   ```bash
-   docker --version
-   docker compose version
-   docker ps
-   free -h
-   df -h /
-   ```
+1. Odbierz od prowadzącego numer przypisanej maszyny `N` oraz login i hasło do Guacamole.
+2. Otwórz w przeglądarce `https://20.166.92.179/terminal/N`, podstawiając swój numer, np. `https://20.166.92.179/terminal/23`. Zaloguj się otrzymanymi danymi i wybierz połączenie do swojej maszyny, jeśli nie otworzy się automatycznie.
+3. Wszystkie polecenia wpisuj w Bash w terminalu Guacamole na przypisanej maszynie Ubuntu.
+4. Stronę uruchomioną w laboratorium otwieraj w osobnej karcie pod `https://20.166.92.179/site/N/`, np. `https://20.166.92.179/site/23/`. Zachowaj końcowy ukośnik. Brama kieruje ten adres na port `8080` Twojej maszyny.
 
-**Schowek w terminalu WWW:** `Ctrl` + `Alt` + `Shift` otwiera menu Guacamole z polem „Clipboard”. Ten sam skrót zamyka menu.
-Przy pracy na własnym komputerze z Dockerem używaj `http://localhost:8080/`. Alternatywny dostęp SSH opisuje lab3.
+**Schowek:** `Ctrl` + `Alt` + `Shift` otwiera i zamyka menu Guacamole. Użyj pola „Clipboard”, aby przenieść tekst między przeglądarką a terminalem.
+
+Sprawdź Dockera, Compose i zasoby maszyny w terminalu Guacamole:
+
+```bash
+docker --version
+docker compose version
+docker ps
+free -h
+df -h /
+```
+
+W wyniku `docker ps` sprawdź kolumnę `PORTS`. Wpis `0.0.0.0:8080->80/tcp` oznacza, że kontener korzysta z portu `8080` na maszynie Ubuntu. Jeśli zajmuje go kontener `imageweb` z Lab 3, zatrzymaj go:
+
+```bash
+docker stop imageweb
+```
+
+Jeśli port zajmuje wcześniejszy kontener z Lab 3 (`customweb` lub `webserver`), użyj jego nazwy w poleceniu `docker stop`.
 
 ## 0. Przygotuj własny katalog pracy
 
@@ -86,7 +97,7 @@ docker run -d --name lab4-manual-db --network lab4-manual --network-alias db \
 docker logs --tail 30 lab4-manual-db
 ```
 
-Poczekaj na komunikat `SQL Server is now ready for client connections`. Sprawdź, czy baza rzeczywiście przyjmuje zapytania:
+Poczekaj na komunikat `SQL Server is now ready for client connections`. W terminalu Guacamole uruchom sprawdzenie bazy. `sqlcmd` łączy się z `localhost` wewnątrz kontenera `lab4-manual-db`:
 
 ```bash
 docker exec lab4-manual-db /opt/mssql-tools18/bin/sqlcmd \
@@ -107,6 +118,7 @@ docker run -d --name lab4-manual-frontend --network lab4-manual --network-alias 
 docker run -d --name lab4-manual-gateway --network lab4-manual -p 8080:80 \
   lab4-gateway:local
 docker ps --filter network=lab4-manual
+# Sprawdź API z maszyny Ubuntu.
 curl -fsS http://localhost:8080/api/products
 ```
 
@@ -140,6 +152,8 @@ docker compose logs --tail 30 backend db
 Wersja startowa ma cztery usługi, jedną automatyczną sieć i `restart: unless-stopped`. **Nie ma jeszcze wolumenu bazy, healthchecka ani podziału sieci.** Krótkie `depends_on: [db]` określa kolejność uruchamiania, ale nie czeka na gotowość SQL Server. Backend może zakończyć się błędem podczas startu; polityka restartu pozwoli mu spróbować ponownie. Nie musi to wystąpić przy każdym uruchomieniu.
 
 Jeśli baza jest gotowa, ale backend jeszcze nie odpowiada, podejrzyj logi i poczekaj na jego wznowienie. W razie potrzeby po potwierdzeniu gotowości bazy wykonaj `docker compose restart backend gateway`.
+
+W terminalu Guacamole sprawdź API na porcie `8080` maszyny Ubuntu:
 
 ```bash
 curl -fsS http://localhost:8080/api/products
@@ -212,7 +226,7 @@ Zatrzymaj projekt przez `docker compose down`, zachowując wolumen. Do **istniej
       start_period: 30s
 ```
 
-`sqlcmd` wykonuje rzeczywiste zapytanie. `-b` ustawia niezerowy kod zakończenia przy błędzie SQL, a `-C` pozwala użyć certyfikatu demonstracyjnej bazy. Zapis `>-` składa dwie linie polecenia w jedną komendę powłoki.
+Healthcheck uruchamia `sqlcmd` wewnątrz kontenera `db`, gdzie `localhost` wskazuje na bazę. `-b` ustawia niezerowy kod zakończenia przy błędzie SQL, a `-C` pozwala użyć certyfikatu demonstracyjnej bazy. Zapis `>-` składa dwie linie polecenia w jedną komendę powłoki.
 
 W usłudze `backend` **zastąp dotychczasowe `depends_on`**:
 
@@ -370,7 +384,7 @@ Zrzuty przekaż w miejscu wskazanym na zajęciach. Po ich wykonaniu możesz zatr
 
 | Objaw | Co sprawdzić |
 |---|---|
-| `port is already allocated` | `docker ps --filter publish=8080`; zatrzymaj swój poprzedni kontener lab3 lub ręczny gateway. |
+| `port is already allocated` | `docker ps`; w kolumnie `PORTS` znajdź kontener publikujący port `8080` i zatrzymaj go, jeśli to Twój poprzedni kontener z Lab 3 lub ręczny gateway. |
 | Brama zwraca 502/503 | Sprawdź mapowanie `8080:80`, `docker compose ps -a` i żądanie `curl` na Ubuntu; sprawdź końcowy ukośnik w `/site/N/`. |
 | Strona się otwiera, ale API nie działa | `docker compose logs --tail 50 backend gateway db`; poczekaj na bazę. Nie dodawaj początkowego `/` do `api/products` we frontendzie. |
 | Baza ma status `unhealthy` | `docker compose logs --tail 50 db`; sprawdź pamięć, hasło, ścieżkę `sqlcmd` i parametr `-C`. |
